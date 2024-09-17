@@ -5,7 +5,7 @@ const { text } = require('stream/consumers');
 const { sign } = require('crypto');
 
 const server = http.createServer((req,res) => 
-{
+{ 
     console.log('Request made to the server');
     console.log(req.url, req.method);
     res.setHeader('Content-Type', 'text\html');
