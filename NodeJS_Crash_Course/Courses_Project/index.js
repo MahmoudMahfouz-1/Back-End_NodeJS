@@ -1,14 +1,36 @@
 const express = require('express');
+const mongoose = require("mongoose");
+const cors = require('cors'); // TO enable the APIs to work from any origin 
+require('dotenv').config();
+
+const httpStatusText = require('./utils/httpStatusText')
 const coursesRouter = require('./routes/courses.route');
 
+const url = process.env.MONGODB_URL;
+
+mongoose.connect(url).then(() => {
+    console.log("mongodb server started");
+});
 
 let app = express();
+app.use(cors());
+
+
+
 app.use(express.json());
 app.use('/api/courses', coursesRouter);
+app.all('*', (req,res) =>
+{
+    return res.json({status: httpStatusText.ERROR, message: "This Resource isn't available"});
+});
+
+app.use((error, req, res, next) =>
+{
+    res.status(error.statusCode || 500).json({status: error.statusText || httpStatusText.ERROR, message: error.message }); 
+})
 
 
 
-
-app.listen(3000, ()=> {
-    console.log(`Listing on port 3000`);
+app.listen(process.env.PORT, ()=> {
+    console.log(`Listing on port ${process.env.PORT}`);
 });
