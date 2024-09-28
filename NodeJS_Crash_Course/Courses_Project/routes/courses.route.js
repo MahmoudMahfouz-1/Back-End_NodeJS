@@ -3,11 +3,12 @@ const {body} = require('express-validator');
 const router = express.Router();
 
 
-let coursesController = require('../controllers/cources.controller')
+const verifyToken = require('../middlewares/verifyToken'); 
+const coursesController = require('../controllers/cources.controller')
 
 router.route('/')
         .get(coursesController.getAllCourses)
-        .post(
+        .post(verifyToken,
         body("title")
             .notEmpty()
             .withMessage("Title is required")
